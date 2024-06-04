@@ -38202,6 +38202,9 @@ async function vtLink(id, apiKey) {
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 
+const src_fs = __nccwpck_require__(7147)
+const src_path = __nccwpck_require__(1017)
+
 ;(async () => {
     try {
         // Get the JSON webhook payload for the event that triggered the workflow
@@ -38251,15 +38254,30 @@ const github = __nccwpck_require__(5438)
             return
         }
 
-        const links = getAssetsLinks(assets.data)
-        console.log('links:', links)
+        // const links = getAssetsLinks(assets.data)
+        // console.log('links:', links)
 
-        console.log('Imports')
+        const path = path.join(__dirname, 'assets')
+        console.log('path:', path)
+
+        // Create the 'assets' directory if it doesn't exist
+        if (!src_fs.existsSync(path)) {
+            src_fs.mkdirSync(path)
+        }
+
+        for (const asset of assets) {
+            console.log(`Downloading: ${asset.name}`)
+            const filePath = path.join(path, asset.name)
+            const assetResponse = await fetch(asset.browser_download_url)
+            const fileStream = src_fs.createWriteStream(filePath)
+            assetResponse.body.pipe(fileStream)
+        }
+
+        const files = await src_fs.promises.readdir(path)
+        console.log('files:', files)
+
         console.log('vtLink:', vtLink)
         console.log('vtUpload:', vtUpload)
-        console.log('log')
-        console.info('info')
-        console.warn('warn')
 
         // core.setOutput("time", time);
     } catch (error) {
@@ -38268,20 +38286,20 @@ const github = __nccwpck_require__(5438)
     }
 })()
 
-/**
- * @function getAssetsLinks
- * @param {Object} assets
- * @return {Array[String]}
- */
-function getAssetsLinks(assets) {
-    // console.log('assets:', assets)
-    const links = []
-    assets.forEach((asset) => {
-        // console.log('asset:', asset)
-        links.push(asset.browser_download_url)
-    })
-    return links
-}
+// /**
+//  * @function getAssetsLinks
+//  * @param {Object} assets
+//  * @return {Array[String]}
+//  */
+// function getAssetsLinks(assets) {
+//     // console.log('assets:', assets)
+//     const links = []
+//     assets.forEach((asset) => {
+//         // console.log('asset:', asset)
+//         links.push(asset.browser_download_url)
+//     })
+//     return links
+// }
 
 })();
 
