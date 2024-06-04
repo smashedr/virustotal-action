@@ -31098,15 +31098,16 @@ const github = __nccwpck_require__(5438)
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
 
-        console.log('github.context.ref:', github.context.ref)
-        const ref = '0.1.12'
-        console.log('using test value:', ref)
+        const releaseTag = github.context.ref.replace('refs/tags/', '')
+        console.log('releaseTag:', releaseTag)
+        const testTag = '0.1.12'
+        console.log('testTag:', testTag)
         const release = await octokit.rest.repos.getReleaseByTag({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
-            tag: ref,
+            tag: testTag,
         })
-        console.log('release:', release)
+        // console.log('release:', release)
 
         const assets = await octokit.rest.repos.listReleaseAssets({
             owner: github.context.repo.owner,
@@ -31114,6 +31115,13 @@ const github = __nccwpck_require__(5438)
             release_id: release.data.id,
         })
         console.log('assets:', assets)
+        getAssets(assets.data)
+
+        console.log('github.context.eventName:', github.context.eventName)
+        if (github.context.eventName !== 'release') {
+            console.warn('Not a release:', github.context.eventName)
+            // return
+        }
 
         // core.setOutput("time", time);
     } catch (error) {
@@ -31121,6 +31129,10 @@ const github = __nccwpck_require__(5438)
         core.setFailed(error.message)
     }
 })()
+
+function getAssets(assets) {
+    console.log('assets:', assets)
+}
 
 })();
 
