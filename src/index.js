@@ -1,3 +1,5 @@
+import { vtLink, vtUpload } from './vt.js'
+
 const core = require('@actions/core')
 const github = require('@actions/github')
 
@@ -52,6 +54,13 @@ const github = require('@actions/github')
 
         const links = getAssetsLinks(assets.data)
         console.log('links:', links)
+
+        console.log('Imports')
+        console.log('vtLink:', vtLink)
+        console.log('vtUpload:', vtUpload)
+        console.log('log')
+        console.info('info')
+        console.warn('warn')
 
         // core.setOutput("time", time);
     } catch (error) {
