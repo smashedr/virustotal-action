@@ -24,7 +24,7 @@ const github = require('@actions/github')
         const release = await octokit.rest.repos.getReleaseByTag({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
-            ref,
+            tag: ref,
         })
         console.log('release', release)
 
