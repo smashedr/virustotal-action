@@ -6,9 +6,9 @@ inputs:
     github_token:
         description: 'GitHub Token from secrets.GITHUB_TOKEN'
         required: true
-    test_input:
-        description: 'Test Input'
-        required: false
+    vt_api_key:
+        description: 'VirusTotal API Token from secrets'
+        required: true
 
 #outputs:
 #  time:
