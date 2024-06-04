@@ -1,7 +1,9 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 
-;(async () => {
+run()
+
+async function run() {
     try {
         // Get the JSON webhook payload for the event that triggered the workflow
         // const payload = JSON.stringify(github.context.payload, undefined, 2)
@@ -34,4 +36,4 @@ const github = require('@actions/github')
         console.warn(error)
         core.setFailed(error.message)
     }
-})()
+}
