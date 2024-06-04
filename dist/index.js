@@ -38265,7 +38265,7 @@ const src_path = __nccwpck_require__(1017)
             src_fs.mkdirSync(assetsPath)
         }
 
-        for (const asset of assets) {
+        for (const asset of assets.data) {
             console.log(`Downloading: ${asset.name}`)
             const filePath = src_path.join(assetsPath, asset.name)
             const assetResponse = await fetch(asset.browser_download_url)

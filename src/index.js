@@ -66,7 +66,7 @@ const path = require('path')
             fs.mkdirSync(assetsPath)
         }
 
-        for (const asset of assets) {
+        for (const asset of assets.data) {
             console.log(`Downloading: ${asset.name}`)
             const filePath = path.join(assetsPath, asset.name)
             const assetResponse = await fetch(asset.browser_download_url)
