@@ -7,7 +7,7 @@ export async function downloadAsset(asset, assetsPath = 'assets') {
     console.log('asset:', asset)
     console.log('assetsPath:', assetsPath)
 
-    const filePath = path.join(assetsPath, asset.name)
+    const filePath = path.join(__dirname, assetsPath, asset.name)
     console.log('filePath:', filePath)
 
     const response = await axios({
@@ -15,12 +15,11 @@ export async function downloadAsset(asset, assetsPath = 'assets') {
         url: asset.browser_download_url,
         responseType: 'stream',
     })
-    console.log('response: omitted')
+    console.log('response:', response)
 
     const writer = fs.createWriteStream(filePath)
-    console.log('response: omitted')
+    console.log('writer:', writer)
     response.data.pipe(writer)
-    console.log('response.data.pipe(writer)')
 
     await new Promise((resolve, reject) => {
         writer.on('finish', resolve)
