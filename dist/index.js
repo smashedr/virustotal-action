@@ -38257,23 +38257,23 @@ const src_path = __nccwpck_require__(1017)
         // const links = getAssetsLinks(assets.data)
         // console.log('links:', links)
 
-        const path = path.join(__dirname, 'assets')
-        console.log('path:', path)
+        const assetsPath = src_path.join(__dirname, 'assets')
+        console.log('path:', assetsPath)
 
         // Create the 'assets' directory if it doesn't exist
-        if (!src_fs.existsSync(path)) {
-            src_fs.mkdirSync(path)
+        if (!src_fs.existsSync(assetsPath)) {
+            src_fs.mkdirSync(assetsPath)
         }
 
         for (const asset of assets) {
             console.log(`Downloading: ${asset.name}`)
-            const filePath = path.join(path, asset.name)
+            const filePath = src_path.join(assetsPath, asset.name)
             const assetResponse = await fetch(asset.browser_download_url)
             const fileStream = src_fs.createWriteStream(filePath)
             assetResponse.body.pipe(fileStream)
         }
 
-        const files = await src_fs.promises.readdir(path)
+        const files = await src_fs.promises.readdir(assetsPath)
         console.log('files:', files)
 
         console.log('vtLink:', vtLink)
