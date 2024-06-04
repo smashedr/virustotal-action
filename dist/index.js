@@ -31099,11 +31099,13 @@ const github = __nccwpck_require__(5438)
         console.log('octokit', octokit)
 
         console.log('github.context.ref', github.context.ref)
+        const ref = '0.1.12'
         console.log('using test value:', '0.1.12')
-        const release = await octokit.rest.repos.getReleaseByTag(
-            ...github.context.repo,
-            '0.1.12'
-        )
+        const release = await octokit.rest.repos.getReleaseByTag({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            tag: ref,
+        })
         console.log('release', release)
 
         const assets = await octokit.rest.repos.listReleaseAssets({
