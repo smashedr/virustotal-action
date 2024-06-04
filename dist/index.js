@@ -38167,9 +38167,12 @@ async function downloadAsset(asset, assetsPath = 'assets') {
         url: asset.browser_download_url,
         responseType: 'stream',
     })
+    console.log('response: omitted')
 
     const writer = fs.createWriteStream(filePath)
+    console.log('response: omitted')
     response.data.pipe(writer)
+    console.log('response.data.pipe(writer)')
 
     await new Promise((resolve, reject) => {
         writer.on('finish', resolve)
@@ -38282,10 +38285,11 @@ const src_path = __nccwpck_require__(1017)
         // console.log('links:', links)
 
         const assetsPath = src_path.join(__dirname, 'assets')
-        console.log('path:', assetsPath)
+        console.log('assetsPath:', assetsPath)
 
         // Create the 'assets' directory if it doesn't exist
         if (!src_fs.existsSync(assetsPath)) {
+            console.log('mkdirSync:', assetsPath)
             src_fs.mkdirSync(assetsPath)
         }
 
