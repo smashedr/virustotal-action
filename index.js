@@ -13,9 +13,11 @@ try {
     const octokit = github.getOctokit(githubToken)
     console.log('octokit', octokit)
 
+    console.log('github.context.ref', github.context.ref)
+    console.log('using test value:', '0.1.12')
     const release = await octokit.rest.repos.getReleaseByTag(
         ...github.context.repo,
-        github.context.ref
+        '0.1.12'
     )
     console.log('release', release)
 
