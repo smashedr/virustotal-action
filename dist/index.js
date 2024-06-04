@@ -31089,6 +31089,12 @@ const github = __nccwpck_require__(5438)
 
         // console.log('github.context', github.context)
 
+        console.log('github.context.eventName:', github.context.eventName)
+        if (github.context.eventName !== 'release') {
+            console.log('Not a release:', github.context.eventName)
+            // return
+        }
+
         const testInput = core.getInput('test_input')
         console.log('testInput:', testInput)
 
@@ -31114,24 +31120,31 @@ const github = __nccwpck_require__(5438)
             repo: github.context.repo.repo,
             release_id: release.data.id,
         })
-        console.log('assets:', assets)
-        getAssets(assets.data)
+        // console.log('assets:', assets)
 
-        console.log('github.context.eventName:', github.context.eventName)
-        if (github.context.eventName !== 'release') {
-            console.warn('Not a release:', github.context.eventName)
-            // return
-        }
+        const links = getAssetsLinks(assets.data)
+        console.log('links:', links)
 
         // core.setOutput("time", time);
     } catch (error) {
-        console.warn(error)
+        console.log(error)
         core.setFailed(error.message)
     }
 })()
 
-function getAssets(assets) {
+/**
+ * @function getAssetsLinks
+ * @param {Object} assets
+ * @return {Array[String]}
+ */
+function getAssetsLinks(assets) {
     console.log('assets:', assets)
+    const links = []
+    assets.forEach((asset) => {
+        console.log('asset:', asset)
+        links.push(asset.browser_download_url)
+    })
+    return links
 }
 
 })();
