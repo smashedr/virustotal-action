@@ -9,7 +9,10 @@ const github = require('@actions/github')
 
         console.log('github.context', github.context)
 
-        const githubToken = core.getInput('githubToken')
+        const testInput = core.getInput('test_input')
+        console.log('testInput', testInput)
+
+        const githubToken = core.getInput('github_token')
         console.log('githubToken', githubToken)
 
         const octokit = github.getOctokit(githubToken)
