@@ -3,17 +3,14 @@ description: 'Scan Files using the VirusTotal API'
 author: 'Shane'
 
 inputs:
-  chrome:
-    description: 'Chrome Archive Location'
-    required: false
-  firefox:
-    description: 'Firefox Archive Location'
-    required: false
+    github_token:
+        description: 'GitHub Token from secrets.GITHUB_TOKEN'
+        required: false
 
 #outputs:
 #  time:
 #    description: 'The time we greeted you'
 
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+    using: 'node20'
+    main: 'dist/index.js'
