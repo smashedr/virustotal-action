@@ -59,10 +59,11 @@ const path = require('path')
         // console.log('links:', links)
 
         const assetsPath = path.join(__dirname, 'assets')
-        console.log('path:', assetsPath)
+        console.log('assetsPath:', assetsPath)
 
         // Create the 'assets' directory if it doesn't exist
         if (!fs.existsSync(assetsPath)) {
+            console.log('mkdirSync:', assetsPath)
             fs.mkdirSync(assetsPath)
         }
 

@@ -15,9 +15,12 @@ export async function downloadAsset(asset, assetsPath = 'assets') {
         url: asset.browser_download_url,
         responseType: 'stream',
     })
+    console.log('response: omitted')
 
     const writer = fs.createWriteStream(filePath)
+    console.log('response: omitted')
     response.data.pipe(writer)
+    console.log('response.data.pipe(writer)')
 
     await new Promise((resolve, reject) => {
         writer.on('finish', resolve)
