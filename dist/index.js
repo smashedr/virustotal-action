@@ -31087,33 +31087,33 @@ const github = __nccwpck_require__(5438)
         // const payload = JSON.stringify(github.context.payload, undefined, 2)
         // console.log('github.context.payload', github.context.payload)
 
-        console.log('github.context', github.context)
+        // console.log('github.context', github.context)
 
         const testInput = core.getInput('test_input')
-        console.log('testInput', testInput)
+        console.log('testInput:', testInput)
 
         const githubToken = core.getInput('github_token')
-        console.log('githubToken', githubToken)
+        console.log('githubToken:', githubToken)
 
         const octokit = github.getOctokit(githubToken)
-        console.log('octokit', octokit)
+        // console.log('octokit:', octokit)
 
-        console.log('github.context.ref', github.context.ref)
+        console.log('github.context.ref:', github.context.ref)
         const ref = '0.1.12'
-        console.log('using test value:', '0.1.12')
+        console.log('using test value:', ref)
         const release = await octokit.rest.repos.getReleaseByTag({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             tag: ref,
         })
-        console.log('release', release)
+        console.log('release:', release)
 
         const assets = await octokit.rest.repos.listReleaseAssets({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
-            release,
+            release_id: release.data.id,
         })
-        console.log('assets', assets)
+        console.log('assets:', assets)
 
         // core.setOutput("time", time);
     } catch (error) {
