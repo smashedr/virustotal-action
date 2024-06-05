@@ -38264,43 +38264,45 @@ const src_path = __nccwpck_require__(1017)
             core.setFailed(`Release Not Found: ${releaseTag}`)
             return
         }
+        console.log('release:', release)
+        console.log('release.body:', release.body)
 
-        const assets = await octokit.rest.repos.listReleaseAssets({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            release_id: release.data.id,
-        })
-        // console.log('assets:', assets)
-        if (!assets.data?.length) {
-            console.log('No Assets Found:', assets)
-            core.setFailed('No Assets Found')
-            return
-        }
-
-        const assetsPath = src_path.join(__dirname, 'assets')
-        console.log('assetsPath:', assetsPath)
-
-        // Create the 'assets' directory if it doesn't exist
-        if (!src_fs.existsSync(assetsPath)) {
-            console.log('mkdirSync:', assetsPath)
-            src_fs.mkdirSync(assetsPath)
-        }
-
-        const results = []
-        for (const asset of assets.data) {
-            console.log(`name: ${asset.name}`)
-            const filePath = await downloadAsset(asset)
-            console.log('filePath:', filePath)
-            const response = await vtUpload(filePath, vtApiKey)
-            const link = await vtLink(response.data.id, vtApiKey)
-            console.log('link:', link)
-            const data = {
-                name: asset.name,
-                link: link,
-            }
-            results.push(data)
-        }
-        console.log('results:', results)
+        // const assets = await octokit.rest.repos.listReleaseAssets({
+        //     owner: github.context.repo.owner,
+        //     repo: github.context.repo.repo,
+        //     release_id: release.data.id,
+        // })
+        // // console.log('assets:', assets)
+        // if (!assets.data?.length) {
+        //     console.log('No Assets Found:', assets)
+        //     core.setFailed('No Assets Found')
+        //     return
+        // }
+        //
+        // const assetsPath = path.join(__dirname, 'assets')
+        // console.log('assetsPath:', assetsPath)
+        //
+        // // Create the 'assets' directory if it doesn't exist
+        // if (!fs.existsSync(assetsPath)) {
+        //     console.log('mkdirSync:', assetsPath)
+        //     fs.mkdirSync(assetsPath)
+        // }
+        //
+        // const results = []
+        // for (const asset of assets.data) {
+        //     console.log(`name: ${asset.name}`)
+        //     const filePath = await downloadAsset(asset)
+        //     console.log('filePath:', filePath)
+        //     const response = await vtUpload(filePath, vtApiKey)
+        //     const link = await vtLink(response.data.id, vtApiKey)
+        //     console.log('link:', link)
+        //     const data = {
+        //         name: asset.name,
+        //         link: link,
+        //     }
+        //     results.push(data)
+        // }
+        // console.log('results:', results)
 
         // core.setOutput("time", time);
     } catch (error) {
