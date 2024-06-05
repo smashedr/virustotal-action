@@ -1,25 +1,24 @@
-# JS Test Action
+# VirusTotal Action
 
-This action should never be used under any circumstances, be it life, death, or npm...
-
-https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action
+Upload Release Assets to VirusTotal and Optionally Update Release Notes with Links.
 
 ## Inputs
 
-| input    | description               |
-|----------|---------------------------|
-| chrome:  | Remote Docker host        |
-| firefox: | Remote Docker username    |
+| input           | required | default | description               |
+|-----------------|----------|---------|---------------------------|
+| github_token:   | Yes      | -       | secrets.GITHUB_TOKEN      |
+| vt_api_key:     | Yes      | -       | VirusTotal API Key        |
+| update_release: | No       | true    | Set to `false` to disable |
 
-## Example usage
+## Simple Example
 
 ```yaml
-name: "Test JS Test"
+name: "Test VirusTotal Workflow"
 
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   test:
@@ -29,18 +28,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: "Test JS"
-        uses: smashedr/js-test-action@master
-        env:
-          WEXT_SHIPIT_CHROME_EXTENSION_ID: ""
-          WEXT_SHIPIT_CHROME_CLIENT_ID: ""
-          WEXT_SHIPIT_CHROME_CLIENT_SECRET: ""
-          WEXT_SHIPIT_CHROME_REFRESH_TOKEN: ""
-          WEXT_SHIPIT_FIREFOX_JWT_ISSUER: ""
-          WEXT_SHIPIT_FIREFOX_JWT_SECRET: ""
+      - name: "VirusTotal"
+        uses: smashedr/virustotal-action@master
         with:
-          chrome: "build/chrome.zip"
-          firefox: "build/firefox.zip"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          update_release: true
 ```
