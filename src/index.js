@@ -18,6 +18,8 @@ const path = require('path')
         console.log('vtApiKey:', vtApiKey)
         const githubToken = core.getInput('github_token')
         console.log('githubToken:', githubToken)
+        const updateRelease = core.getInput('update_release')
+        console.log('updateRelease:', updateRelease)
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)

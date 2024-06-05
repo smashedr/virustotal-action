@@ -38166,23 +38166,12 @@ async function downloadAsset(asset, assetsDir = 'assets') {
         responseType: 'stream',
     })
     // console.log('response:', response)
-
-    // TODO: Cleanup this code
-    // response.data.pipe(fs.createWriteStream(filePath))
     await new Promise((resolve, reject) => {
         const writer = fs.createWriteStream(filePath)
         response.data.pipe(writer)
         writer.on('finish', resolve)
         writer.on('error', reject)
     })
-
-    // const writer = fs.createWriteStream(filePath)
-    // response.data.pipe(writer)
-    // await new Promise((resolve, reject) => {
-    //     writer.on('finish', resolve)
-    //     writer.on('error', reject)
-    // })
-
     console.log('wrote:', filePath)
     return filePath
 }
@@ -38244,6 +38233,8 @@ const src_path = __nccwpck_require__(1017)
         console.log('vtApiKey:', vtApiKey)
         const githubToken = core.getInput('github_token')
         console.log('githubToken:', githubToken)
+        const updateRelease = core.getInput('update_release')
+        console.log('updateRelease:', updateRelease)
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)

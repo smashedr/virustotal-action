@@ -14,23 +14,12 @@ export async function downloadAsset(asset, assetsDir = 'assets') {
         responseType: 'stream',
     })
     // console.log('response:', response)
-
-    // TODO: Cleanup this code
-    // response.data.pipe(fs.createWriteStream(filePath))
     await new Promise((resolve, reject) => {
         const writer = fs.createWriteStream(filePath)
         response.data.pipe(writer)
         writer.on('finish', resolve)
         writer.on('error', reject)
     })
-
-    // const writer = fs.createWriteStream(filePath)
-    // response.data.pipe(writer)
-    // await new Promise((resolve, reject) => {
-    //     writer.on('finish', resolve)
-    //     writer.on('error', reject)
-    // })
-
     console.log('wrote:', filePath)
     return filePath
 }

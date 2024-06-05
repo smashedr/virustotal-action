@@ -9,6 +9,10 @@ inputs:
     vt_api_key:
         description: 'VirusTotal API Token from secrets'
         required: true
+    update_release:
+        description: 'Update Release Notes with VT Links'
+        required: false
+        default: 'true'
 
 #outputs:
 #  time:
