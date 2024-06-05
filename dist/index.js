@@ -38213,7 +38213,7 @@ async function vtHash(id, apiKey) {
     const info = response.data.meta.file_info
     console.log('response.data.meta.file_info:', info)
 
-    const hash = info.sha256 || info.sha1 || info.md5
+    const hash = info.md5 || info.sha1 || info.sha256
     console.log('hash:', hash)
     return hash
 }
@@ -38311,9 +38311,11 @@ const src_crypto = __nccwpck_require__(6113)
             const response = await vtUpload(filePath, vtApiKey)
             const hash = await vtHash(response.data.id, vtApiKey)
             console.log('hash:', hash)
-            const calculatedHash = await calculateSHA256(filePath)
-            console.log('calculatedHash:', calculatedHash)
-            const link = `https://www.virustotal.com/gui/file/${hash | calculatedHash}`
+            const sha256 = await calculateSHA256(filePath)
+            console.log('sha256:', sha256)
+            const md5 = await calculateMD5(filePath)
+            console.log('md5:', md5)
+            const link = `https://www.virustotal.com/gui/file/${hash || md5 || sha256}`
             console.log('link:', link)
             const data = {
                 name: asset.name,
@@ -38364,6 +38366,26 @@ async function calculateSHA256(filePath) {
 
         stream.on('error', (err) => {
             reject(err)
+        })
+    })
+}
+
+async function calculateMD5(filePath) {
+    return new Promise((resolve, reject) => {
+        const hash = src_crypto.createHash('md5')
+        const stream = src_fs.createReadStream(filePath)
+
+        stream.on('error', (err) => {
+            reject(err)
+        })
+
+        stream.on('data', (chunk) => {
+            hash.update(chunk)
+        })
+
+        stream.on('end', () => {
+            const md5Hash = hash.digest('hex')
+            resolve(md5Hash)
         })
     })
 }

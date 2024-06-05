@@ -68,9 +68,11 @@ const crypto = require('crypto')
             const response = await vtUpload(filePath, vtApiKey)
             const hash = await vtHash(response.data.id, vtApiKey)
             console.log('hash:', hash)
-            const calculatedHash = await calculateSHA256(filePath)
-            console.log('calculatedHash:', calculatedHash)
-            const link = `https://www.virustotal.com/gui/file/${hash | calculatedHash}`
+            const sha256 = await calculateSHA256(filePath)
+            console.log('sha256:', sha256)
+            const md5 = await calculateMD5(filePath)
+            console.log('md5:', md5)
+            const link = `https://www.virustotal.com/gui/file/${hash || md5 || sha256}`
             console.log('link:', link)
             const data = {
                 name: asset.name,
@@ -121,6 +123,26 @@ async function calculateSHA256(filePath) {
 
         stream.on('error', (err) => {
             reject(err)
+        })
+    })
+}
+
+async function calculateMD5(filePath) {
+    return new Promise((resolve, reject) => {
+        const hash = crypto.createHash('md5')
+        const stream = fs.createReadStream(filePath)
+
+        stream.on('error', (err) => {
+            reject(err)
+        })
+
+        stream.on('data', (chunk) => {
+            hash.update(chunk)
+        })
+
+        stream.on('end', () => {
+            const md5Hash = hash.digest('hex')
+            resolve(md5Hash)
         })
     })
 }

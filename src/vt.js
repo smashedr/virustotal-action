@@ -61,7 +61,7 @@ export async function vtHash(id, apiKey) {
     const info = response.data.meta.file_info
     console.log('response.data.meta.file_info:', info)
 
-    const hash = info.sha256 || info.sha1 || info.md5
+    const hash = info.md5 || info.sha1 || info.sha256
     console.log('hash:', hash)
     return hash
 }
