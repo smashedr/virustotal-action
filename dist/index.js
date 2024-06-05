@@ -38235,6 +38235,8 @@ const src_path = __nccwpck_require__(1017)
         console.log('githubToken:', githubToken)
         const updateRelease = core.getInput('update_release')
         console.log('updateRelease:', updateRelease)
+        console.log('typeof:', typeof updateRelease)
+        console.log('wtf')
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)

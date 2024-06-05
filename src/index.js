@@ -21,6 +21,7 @@ const path = require('path')
         const updateRelease = core.getInput('update_release')
         console.log('updateRelease:', updateRelease)
         console.log('typeof:', typeof updateRelease)
+        console.log('wtf')
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
