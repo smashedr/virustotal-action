@@ -14,10 +14,6 @@ inputs:
         required: false
         default: 'true'
 
-#outputs:
-#  time:
-#    description: 'The time we greeted you'
-
 runs:
     using: 'node20'
     main: 'dist/index.js'

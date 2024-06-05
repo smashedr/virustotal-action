@@ -8,29 +8,27 @@ const path = require('path')
 
 ;(async () => {
     try {
-        console.log('github.context', github.context)
+        // console.log('github.context', github.context)
         // console.log('process.env:', process.env)
-
         if (github.context.eventName !== 'release') {
             console.log('Skipping non-release:', github.context.eventName)
-            // return
+            return
         }
 
         const vtApiKey = core.getInput('vt_api_key')
-        console.log('vtApiKey:', vtApiKey)
+        console.log('vt_api_key:', vtApiKey)
         const githubToken = core.getInput('github_token')
-        console.log('githubToken:', githubToken)
+        console.log('github_token:', githubToken)
         const updateRelease = core.getInput('update_release')
-        console.log('updateRelease:', updateRelease)
+        console.log('update_release:', updateRelease)
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
 
-        // const releaseTag = github.context.ref.replace('refs/tags/', '')
-        // console.log('releaseTag:', releaseTag)
-        console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
-        const releaseTag = '0.1.12'
+        const releaseTag = github.context.ref.replace('refs/tags/', '')
+        // const releaseTag = '0.1.12'
         console.log('releaseTag:', releaseTag)
+        console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
 
         const release = await octokit.rest.repos.getReleaseByTag({
             owner: github.context.repo.owner,
@@ -59,7 +57,6 @@ const path = require('path')
         console.log('RUNNER_TEMP:', process.env.RUNNER_TEMP)
         const assetsPath = path.join(process.env.RUNNER_TEMP, 'assets')
         console.log('assetsPath:', assetsPath)
-        // Create the 'assets' directory if it doesn't exist
         if (!fs.existsSync(assetsPath)) {
             console.log('mkdirSync:', assetsPath)
             fs.mkdirSync(assetsPath)
@@ -104,8 +101,6 @@ const path = require('path')
             release_id: release.data.id,
             body: body,
         })
-
-        // core.setOutput("time", time);
     } catch (error) {
         console.log(error)
         core.setFailed(error.message)
