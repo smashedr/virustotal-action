@@ -38199,8 +38199,8 @@ async function vtUpload(filePath, apiKey) {
     return response.data
 }
 
-async function vtLink(id, apiKey) {
-    console.log('vtLink:', id)
+async function vtHash(id, apiKey) {
+    console.log('vtHash: id:', id)
     const response = await axios.get(
         `https://www.virustotal.com/api/v3/analyses/${id}`,
         {
@@ -38209,11 +38209,12 @@ async function vtLink(id, apiKey) {
             },
         }
     )
-    console.log('response:', response)
+    console.log('response.data:', response.data)
+    console.log('response.data.meta.file_info:', response.data.meta.file_info)
 
     const sha256Hash = response.data.meta.file_info.sha256
     console.log('sha256Hash:', sha256Hash)
-    return `https://www.virustotal.com/gui/file/${sha256Hash}`
+    return sha256Hash
 }
 
 async function vtUploadUrl(filePath, apiKey) {
@@ -38245,6 +38246,7 @@ const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const src_fs = __nccwpck_require__(7147)
 const src_path = __nccwpck_require__(1017)
+const src_crypto = __nccwpck_require__(6113)
 
 ;(async () => {
     try {
@@ -38306,7 +38308,11 @@ const src_path = __nccwpck_require__(1017)
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
-            const link = await vtLink(response.data.id, vtApiKey)
+            const hash = await vtHash(response.data.id, vtApiKey)
+            console.log('hash:', hash)
+            const calculatedHash = calculateSHA256(filePath)
+            console.log('calculatedHash:', calculatedHash)
+            const link = `https://www.virustotal.com/gui/file/${hash | calculatedHash}`
             console.log('link:', link)
             const data = {
                 name: asset.name,
@@ -38340,6 +38346,26 @@ const src_path = __nccwpck_require__(1017)
         core.setFailed(error.message)
     }
 })()
+
+async function calculateSHA256(filePath) {
+    const hash = src_crypto.createHash('sha256')
+    const stream = src_fs.createReadStream(filePath)
+
+    return new Promise((resolve, reject) => {
+        stream.on('data', (data) => {
+            hash.update(data)
+        })
+
+        stream.on('end', () => {
+            const sha256Hash = hash.digest('hex')
+            resolve(sha256Hash)
+        })
+
+        stream.on('error', (err) => {
+            reject(err)
+        })
+    })
+}
 
 })();
 

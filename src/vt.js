@@ -47,8 +47,8 @@ export async function vtUpload(filePath, apiKey) {
     return response.data
 }
 
-export async function vtLink(id, apiKey) {
-    console.log('vtLink:', id)
+export async function vtHash(id, apiKey) {
+    console.log('vtHash: id:', id)
     const response = await axios.get(
         `https://www.virustotal.com/api/v3/analyses/${id}`,
         {
@@ -57,11 +57,12 @@ export async function vtLink(id, apiKey) {
             },
         }
     )
-    console.log('response:', response)
+    console.log('response.data:', response.data)
+    console.log('response.data.meta.file_info:', response.data.meta.file_info)
 
     const sha256Hash = response.data.meta.file_info.sha256
     console.log('sha256Hash:', sha256Hash)
-    return `https://www.virustotal.com/gui/file/${sha256Hash}`
+    return sha256Hash
 }
 
 async function vtUploadUrl(filePath, apiKey) {
