@@ -31,7 +31,7 @@ const path = require('path')
             repo: github.context.repo.repo,
             tag: testTag,
         })
-        console.log('release.data.id:', release.data.id)
+        console.log('release.data.id:', releaseTag.data.id)
         const release = await octokit.rest.repos.getRelease({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
