@@ -38186,7 +38186,7 @@ async function vtUpload(filePath, apiKey) {
     console.log('vtUpload:', filePath)
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
-    const url = await vtUploadUrl(filePath, apiKey)
+    const url = await vtGetURL(filePath, apiKey)
     console.log('url:', url)
     const response = await axios.post(url, form, {
         headers: {
@@ -38199,26 +38199,7 @@ async function vtUpload(filePath, apiKey) {
     return response.data
 }
 
-// export async function vtHash(id, apiKey) {
-//     console.log('vtHash: id:', id)
-//     const response = await axios.get(
-//         `https://www.virustotal.com/api/v3/analyses/${id}`,
-//         {
-//             headers: {
-//                 'x-apikey': apiKey,
-//             },
-//         }
-//     )
-//     console.log('response.data:', response.data)
-//     const info = response.data.meta.file_info
-//     console.log('response.data.meta.file_info:', info)
-//
-//     const hash = info.md5 || info.sha1 || info.sha256
-//     console.log('hash:', hash)
-//     return hash
-// }
-
-async function vtUploadUrl(filePath, apiKey) {
+async function vtGetURL(filePath, apiKey) {
     const stats = fs.statSync(filePath)
     console.log('stats.size:', stats.size)
     if (stats.size < 32000000) {
@@ -38240,6 +38221,25 @@ async function vtUploadUrl(filePath, apiKey) {
     return data.data
 }
 
+// export async function vtHash(id, apiKey) {
+//     console.log('vtHash: id:', id)
+//     const response = await axios.get(
+//         `https://www.virustotal.com/api/v3/analyses/${id}`,
+//         {
+//             headers: {
+//                 'x-apikey': apiKey,
+//             },
+//         }
+//     )
+//     console.log('response.data:', response.data)
+//     const info = response.data.meta.file_info
+//     console.log('response.data.meta.file_info:', info)
+//
+//     const hash = info.md5 || info.sha1 || info.sha256
+//     console.log('hash:', hash)
+//     return hash
+// }
+
 ;// CONCATENATED MODULE: ./src/index.js
 
 
@@ -38247,7 +38247,7 @@ const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
 const src_fs = __nccwpck_require__(7147)
 const src_path = __nccwpck_require__(1017)
-const src_crypto = __nccwpck_require__(6113)
+// const crypto = require('crypto')
 
 ;(async () => {
     try {
@@ -38314,10 +38314,9 @@ const src_crypto = __nccwpck_require__(6113)
             // console.log('hash:', hash)
             // const sha256 = await calculateSHA256(filePath)
             // console.log('sha256:', sha256)
-            const md5 = await calculateMD5(filePath)
-            console.log('md5:', md5)
-            // const link = `https://www.virustotal.com/gui/file/${hash || md5 || sha256}`
-            const link = `https://www.virustotal.com/gui/file/${md5}`
+            // const md5 = await calculateMD5(filePath)
+            // console.log('md5:', md5)
+            const link = `https://www.virustotal.com/gui/file-analysis/${response.data.id}`
             console.log('link:', link)
             const data = {
                 name: asset.name,
@@ -38352,25 +38351,25 @@ const src_crypto = __nccwpck_require__(6113)
     }
 })()
 
-async function calculateMD5(filePath) {
-    return new Promise((resolve, reject) => {
-        const hash = src_crypto.createHash('md5')
-        const stream = src_fs.createReadStream(filePath)
-
-        stream.on('error', (err) => {
-            reject(err)
-        })
-
-        stream.on('data', (chunk) => {
-            hash.update(chunk)
-        })
-
-        stream.on('end', () => {
-            const md5Hash = hash.digest('hex')
-            resolve(md5Hash)
-        })
-    })
-}
+// async function calculateMD5(filePath) {
+//     return new Promise((resolve, reject) => {
+//         const hash = crypto.createHash('md5')
+//         const stream = fs.createReadStream(filePath)
+//
+//         stream.on('error', (err) => {
+//             reject(err)
+//         })
+//
+//         stream.on('data', (chunk) => {
+//             hash.update(chunk)
+//         })
+//
+//         stream.on('end', () => {
+//             const md5Hash = hash.digest('hex')
+//             resolve(md5Hash)
+//         })
+//     })
+// }
 
 // async function calculateSHA256(filePath) {
 //     const hash = crypto.createHash('sha256')

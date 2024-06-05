@@ -34,7 +34,7 @@ export async function vtUpload(filePath, apiKey) {
     console.log('vtUpload:', filePath)
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
-    const url = await vtUploadUrl(filePath, apiKey)
+    const url = await vtGetURL(filePath, apiKey)
     console.log('url:', url)
     const response = await axios.post(url, form, {
         headers: {
@@ -47,26 +47,7 @@ export async function vtUpload(filePath, apiKey) {
     return response.data
 }
 
-// export async function vtHash(id, apiKey) {
-//     console.log('vtHash: id:', id)
-//     const response = await axios.get(
-//         `https://www.virustotal.com/api/v3/analyses/${id}`,
-//         {
-//             headers: {
-//                 'x-apikey': apiKey,
-//             },
-//         }
-//     )
-//     console.log('response.data:', response.data)
-//     const info = response.data.meta.file_info
-//     console.log('response.data.meta.file_info:', info)
-//
-//     const hash = info.md5 || info.sha1 || info.sha256
-//     console.log('hash:', hash)
-//     return hash
-// }
-
-async function vtUploadUrl(filePath, apiKey) {
+async function vtGetURL(filePath, apiKey) {
     const stats = fs.statSync(filePath)
     console.log('stats.size:', stats.size)
     if (stats.size < 32000000) {
@@ -87,3 +68,22 @@ async function vtUploadUrl(filePath, apiKey) {
     // console.log('data:', data)
     return data.data
 }
+
+// export async function vtHash(id, apiKey) {
+//     console.log('vtHash: id:', id)
+//     const response = await axios.get(
+//         `https://www.virustotal.com/api/v3/analyses/${id}`,
+//         {
+//             headers: {
+//                 'x-apikey': apiKey,
+//             },
+//         }
+//     )
+//     console.log('response.data:', response.data)
+//     const info = response.data.meta.file_info
+//     console.log('response.data.meta.file_info:', info)
+//
+//     const hash = info.md5 || info.sha1 || info.sha256
+//     console.log('hash:', hash)
+//     return hash
+// }
