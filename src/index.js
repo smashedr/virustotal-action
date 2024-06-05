@@ -67,20 +67,24 @@ const path = require('path')
             fs.mkdirSync(assetsPath)
         }
 
-        const assetPaths = []
+        const results = []
         for (const asset of assets.data) {
             console.log(`name: ${asset.name}`)
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
-            assetPaths.push(filePath)
+            const response = vtUpload(filePath, vtApiKey)
+            const link = await vtLink(response.data.id)
+            console.log('link:', link)
+            const data = {
+                name: assets.data,
+                link: link,
+            }
+            results.push(data)
         }
-        console.log('assetPaths:', assetPaths)
+        console.log('results:', results)
 
-        const files = await fs.promises.readdir(assetsPath)
-        console.log('files:', files)
-
-        // console.log('vtLink:', vtLink)
-        // console.log('vtUpload:', vtUpload)
+        // const files = await fs.promises.readdir(assetsPath)
+        // console.log('files:', files)
 
         // core.setOutput("time", time);
     } catch (error) {

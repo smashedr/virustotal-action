@@ -38182,9 +38182,10 @@ async function downloadAsset(asset, assetsDir = 'assets') {
     return filePath
 }
 
-async function vtUpload(fileName, apiKey) {
-    const filePath = path.resolve(__dirname, fileName)
-    console.log('filePath:', filePath)
+async function vtUpload(filePath, apiKey) {
+    console.log('vtUpload:', filePath)
+    // const filePath = path.resolve(__dirname, fileName)
+    // console.log('filePath:', filePath)
 
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
@@ -38205,7 +38206,7 @@ async function vtUpload(fileName, apiKey) {
 }
 
 async function vtLink(id, apiKey) {
-    // Retrieve the analysis report using the analysis ID
+    console.log('vtLink:', id)
     const response = await axios.get(
         `https://www.virustotal.com/api/v3/analyses/${id}`,
         {
@@ -38293,20 +38294,24 @@ const src_path = __nccwpck_require__(1017)
             src_fs.mkdirSync(assetsPath)
         }
 
-        const assetPaths = []
+        const results = []
         for (const asset of assets.data) {
             console.log(`name: ${asset.name}`)
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
-            assetPaths.push(filePath)
+            const response = vtUpload(filePath, vtApiKey)
+            const link = await vtLink(response.data.id)
+            console.log('link:', link)
+            const data = {
+                name: assets.data,
+                link: link,
+            }
+            results.push(data)
         }
-        console.log('assetPaths:', assetPaths)
+        console.log('results:', results)
 
-        const files = await src_fs.promises.readdir(assetsPath)
-        console.log('files:', files)
-
-        // console.log('vtLink:', vtLink)
-        // console.log('vtUpload:', vtUpload)
+        // const files = await fs.promises.readdir(assetsPath)
+        // console.log('files:', files)
 
         // core.setOutput("time", time);
     } catch (error) {

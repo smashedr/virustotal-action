@@ -30,9 +30,10 @@ export async function downloadAsset(asset, assetsDir = 'assets') {
     return filePath
 }
 
-export async function vtUpload(fileName, apiKey) {
-    const filePath = path.resolve(__dirname, fileName)
-    console.log('filePath:', filePath)
+export async function vtUpload(filePath, apiKey) {
+    console.log('vtUpload:', filePath)
+    // const filePath = path.resolve(__dirname, fileName)
+    // console.log('filePath:', filePath)
 
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
@@ -53,7 +54,7 @@ export async function vtUpload(fileName, apiKey) {
 }
 
 export async function vtLink(id, apiKey) {
-    // Retrieve the analysis report using the analysis ID
+    console.log('vtLink:', id)
     const response = await axios.get(
         `https://www.virustotal.com/api/v3/analyses/${id}`,
         {
