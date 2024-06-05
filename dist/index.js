@@ -38229,7 +38229,6 @@ async function vtLink(id, apiKey) {
 
 const core = __nccwpck_require__(2186)
 const github = __nccwpck_require__(5438)
-
 const src_fs = __nccwpck_require__(7147)
 const src_path = __nccwpck_require__(1017)
 
@@ -38237,7 +38236,7 @@ const src_path = __nccwpck_require__(1017)
     try {
         // console.log('github.context', github.context)
         if (github.context.eventName !== 'release') {
-            console.log('Not a release:', github.context.eventName)
+            console.log('Skipping non-release:', github.context.eventName)
             // return
         }
 
@@ -38262,6 +38261,7 @@ const src_path = __nccwpck_require__(1017)
         // console.log('release:', release)
         if (!release?.data) {
             console.log('Release Not Found:', release)
+            core.setFailed(`Release Not Found: ${releaseTag}`)
             return
         }
 
@@ -38273,6 +38273,7 @@ const src_path = __nccwpck_require__(1017)
         // console.log('assets:', assets)
         if (!assets.data?.length) {
             console.log('No Assets Found:', assets)
+            core.setFailed('No Assets Found')
             return
         }
 
@@ -38300,9 +38301,6 @@ const src_path = __nccwpck_require__(1017)
             results.push(data)
         }
         console.log('results:', results)
-
-        // const files = await fs.promises.readdir(assetsPath)
-        // console.log('files:', files)
 
         // core.setOutput("time", time);
     } catch (error) {
