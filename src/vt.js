@@ -48,7 +48,7 @@ export async function vtUpload(filePath, apiKey) {
             },
         }
     )
-    console.log('response:', response)
+    // console.log('response:', response)
     console.log('response.data.data.id:', response.data.data.id)
     return response.data
 }

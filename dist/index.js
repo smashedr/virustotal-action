@@ -38200,7 +38200,7 @@ async function vtUpload(filePath, apiKey) {
             },
         }
     )
-    console.log('response:', response)
+    // console.log('response:', response)
     console.log('response.data.data.id:', response.data.data.id)
     return response.data
 }
@@ -38300,7 +38300,7 @@ const src_path = __nccwpck_require__(1017)
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
-            const link = await vtLink(response.data.id)
+            const link = await vtLink(response.data.id, vtApiKey)
             console.log('link:', link)
             const data = {
                 name: assets.data,
