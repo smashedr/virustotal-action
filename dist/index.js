@@ -38184,22 +38184,16 @@ async function downloadAsset(asset, assetsDir = 'assets') {
 
 async function vtUpload(filePath, apiKey) {
     console.log('vtUpload:', filePath)
-    // const filePath = path.resolve(__dirname, fileName)
-    // console.log('filePath:', filePath)
-
     const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
-
-    const response = await axios.post(
-        'https://www.virustotal.com/api/v3/files',
-        form,
-        {
-            headers: {
-                'x-apikey': apiKey,
-                ...form.getHeaders(),
-            },
-        }
-    )
+    const url = await vtUploadUrl(filePath, apiKey)
+    console.log('url:', url)
+    const response = await axios.post(url, form, {
+        headers: {
+            'x-apikey': apiKey,
+            ...form.getHeaders(),
+        },
+    })
     // console.log('response:', response)
     console.log('response.data.data.id:', response.data.data.id)
     return response.data
@@ -38218,10 +38212,29 @@ async function vtLink(id, apiKey) {
 
     const sha256Hash = response.data.meta.file_info.sha256
     console.log('sha256Hash:', sha256Hash)
+    return `https://www.virustotal.com/gui/file/${sha256Hash}`
+}
 
-    const link = `https://www.virustotal.com/gui/file/${sha256Hash}`
-    console.log('link:', link)
-    return link
+async function vtUploadUrl(filePath, apiKey) {
+    const stats = fs.statSync(filePath)
+    console.log('stats.size:', stats.size)
+    if (stats.size < 32000000) {
+        return 'https://www.virustotal.com/api/v3/files'
+    }
+
+    const options = {
+        method: 'GET',
+        headers: { accept: 'application/json', 'x-apikey': apiKey },
+    }
+
+    const response = await fetch(
+        'https://www.virustotal.com/api/v3/files/upload_url',
+        options
+    )
+    // console.log('response:', response)
+    const data = await response.json()
+    // console.log('data:', data)
+    return data.data
 }
 
 ;// CONCATENATED MODULE: ./src/index.js
