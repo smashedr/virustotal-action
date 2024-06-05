@@ -51,6 +51,10 @@ const path = require('path')
             return
         }
 
+        console.log('process.env:', process.env)
+        const tempDir = process.env.RUNNER_TEMP
+        console.log('tempDir:', tempDir)
+
         const assetsPath = path.join(__dirname, 'assets')
         console.log('assetsPath:', assetsPath)
 
