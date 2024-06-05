@@ -6,10 +6,8 @@ const path = require('path')
 export async function downloadAsset(asset, assetsDir = 'assets') {
     // console.log('asset:', asset)
     // console.log('assetsDir:', assetsDir)
-
     const filePath = path.join(__dirname, assetsDir, asset.name)
     console.log('filePath:', filePath)
-
     const response = await axios({
         method: 'GET',
         url: asset.browser_download_url,
@@ -17,10 +15,11 @@ export async function downloadAsset(asset, assetsDir = 'assets') {
     })
     // console.log('response:', response)
 
+    // TODO: Cleanup this code
+    // response.data.pipe(fs.createWriteStream(filePath))
     const writer = fs.createWriteStream(filePath)
     // console.log('writer:', writer)
     response.data.pipe(writer)
-
     await new Promise((resolve, reject) => {
         writer.on('finish', resolve)
         writer.on('error', reject)
@@ -43,7 +42,6 @@ export async function vtUpload(filePath, apiKey) {
         },
     })
     // console.log('response:', response)
-    console.log('response.data.data.id:', response.data.data.id)
     return response.data
 }
 
@@ -53,12 +51,10 @@ async function vtGetURL(filePath, apiKey) {
     if (stats.size < 32000000) {
         return 'https://www.virustotal.com/api/v3/files'
     }
-
     const options = {
         method: 'GET',
         headers: { accept: 'application/json', 'x-apikey': apiKey },
     }
-
     const response = await fetch(
         'https://www.virustotal.com/api/v3/files/upload_url',
         options
@@ -68,22 +64,3 @@ async function vtGetURL(filePath, apiKey) {
     // console.log('data:', data)
     return data.data
 }
-
-// export async function vtHash(id, apiKey) {
-//     console.log('vtHash: id:', id)
-//     const response = await axios.get(
-//         `https://www.virustotal.com/api/v3/analyses/${id}`,
-//         {
-//             headers: {
-//                 'x-apikey': apiKey,
-//             },
-//         }
-//     )
-//     console.log('response.data:', response.data)
-//     const info = response.data.meta.file_info
-//     console.log('response.data.meta.file_info:', info)
-//
-//     const hash = info.md5 || info.sha1 || info.sha256
-//     console.log('hash:', hash)
-//     return hash
-// }

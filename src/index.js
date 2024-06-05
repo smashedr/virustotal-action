@@ -67,12 +67,6 @@ const path = require('path')
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
             console.log('response.data.id:', response.data.id)
-            // const hash = await vtHash(response.data.id, vtApiKey)
-            // console.log('hash:', hash)
-            // const sha256 = await calculateSHA256(filePath)
-            // console.log('sha256:', sha256)
-            // const md5 = await calculateMD5(filePath)
-            // console.log('md5:', md5)
             const link = `https://www.virustotal.com/gui/file-analysis/${response.data.id}`
             console.log('link:', link)
             const data = {
@@ -107,43 +101,3 @@ const path = require('path')
         core.setFailed(error.message)
     }
 })()
-
-// async function calculateMD5(filePath) {
-//     return new Promise((resolve, reject) => {
-//         const hash = crypto.createHash('md5')
-//         const stream = fs.createReadStream(filePath)
-//
-//         stream.on('error', (err) => {
-//             reject(err)
-//         })
-//
-//         stream.on('data', (chunk) => {
-//             hash.update(chunk)
-//         })
-//
-//         stream.on('end', () => {
-//             const md5Hash = hash.digest('hex')
-//             resolve(md5Hash)
-//         })
-//     })
-// }
-
-// async function calculateSHA256(filePath) {
-//     const hash = crypto.createHash('sha256')
-//     const stream = fs.createReadStream(filePath)
-//
-//     return new Promise((resolve, reject) => {
-//         stream.on('data', (data) => {
-//             hash.update(data)
-//         })
-//
-//         stream.on('end', () => {
-//             const sha256Hash = hash.digest('hex')
-//             resolve(sha256Hash)
-//         })
-//
-//         stream.on('error', (err) => {
-//             reject(err)
-//         })
-//     })
-// }
