@@ -21,29 +21,23 @@ const path = require('path')
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
 
-        const tag = github.context.ref.replace('refs/tags/', '')
-        console.log('tag:', tag)
+        const releaseTag = github.context.ref.replace('refs/tags/', '')
+        console.log('releaseTag:', releaseTag)
         const testTag = '0.1.12'
         console.log('testTag:', testTag)
 
-        const releaseTag = await octokit.rest.repos.getReleaseByTag({
+        const release = await octokit.rest.repos.getReleaseByTag({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             tag: testTag,
         })
-        console.log('release.data.id:', releaseTag.data.id)
-        const release = await octokit.rest.repos.getRelease({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            release_id: releaseTag.data.id,
-        })
         console.log('release:', release)
         if (!release?.data) {
             console.log('Release Not Found:', release)
-            core.setFailed(`Release Not Found: ${tag}`)
+            core.setFailed(`Release Not Found: ${releaseTag}`)
             return
         }
-        console.log('release.body:', release.body)
+        console.log('release.data.body:', release.data.body)
 
         // const assets = await octokit.rest.repos.listReleaseAssets({
         //     owner: github.context.repo.owner,
