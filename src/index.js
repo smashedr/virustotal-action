@@ -67,40 +67,20 @@ const path = require('path')
             fs.mkdirSync(assetsPath)
         }
 
+        const assetPaths = []
         for (const asset of assets.data) {
             console.log(`name: ${asset.name}`)
-            console.log(`browser_download_url: ${asset.browser_download_url}`)
-
-            await downloadAsset(asset)
-
-            // const filePath = path.join(assetsPath, asset.name)
-            // console.log('filePath:', filePath)
-            // const assetResponse = await fetch(asset.browser_download_url)
-            // console.log('assetResponse:', assetResponse)
-            // const fileStream = fs.createWriteStream(filePath)
-            // assetResponse.body.pipe(fileStream) // error
-
-            // const filePath = path.join(assetsPath, asset.name)
-            // const response = await axios({
-            //     method: 'GET',
-            //     url: asset.browser_download_url,
-            //     responseType: 'stream', // This tells Axios to return a readable stream
-            // })
-            //
-            // const writer = fs.createWriteStream(filePath)
-            // response.data.pipe(writer)
-            //
-            // await new Promise((resolve, reject) => {
-            //     writer.on('finish', resolve)
-            //     writer.on('error', reject)
-            // })
+            const filePath = await downloadAsset(asset)
+            console.log('filePath:', filePath)
+            assetPaths.push(filePath)
         }
+        console.log('assetPaths:', assetPaths)
 
         const files = await fs.promises.readdir(assetsPath)
         console.log('files:', files)
 
-        console.log('vtLink:', vtLink)
-        console.log('vtUpload:', vtUpload)
+        // console.log('vtLink:', vtLink)
+        // console.log('vtUpload:', vtUpload)
 
         // core.setOutput("time", time);
     } catch (error) {

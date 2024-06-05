@@ -3,11 +3,11 @@ const FormData = require('form-data')
 const fs = require('fs')
 const path = require('path')
 
-export async function downloadAsset(asset, assetsPath = 'assets') {
-    console.log('asset:', asset)
-    console.log('assetsPath:', assetsPath)
+export async function downloadAsset(asset, assetsDir = 'assets') {
+    // console.log('asset:', asset)
+    // console.log('assetsDir:', assetsDir)
 
-    const filePath = path.join(__dirname, assetsPath, asset.name)
+    const filePath = path.join(__dirname, assetsDir, asset.name)
     console.log('filePath:', filePath)
 
     const response = await axios({
@@ -15,10 +15,10 @@ export async function downloadAsset(asset, assetsPath = 'assets') {
         url: asset.browser_download_url,
         responseType: 'stream',
     })
-    console.log('response:', response)
+    // console.log('response:', response)
 
     const writer = fs.createWriteStream(filePath)
-    console.log('writer:', writer)
+    // console.log('writer:', writer)
     response.data.pipe(writer)
 
     await new Promise((resolve, reject) => {
@@ -27,6 +27,7 @@ export async function downloadAsset(asset, assetsPath = 'assets') {
     })
 
     console.log('wrote:', filePath)
+    return filePath
 }
 
 export async function vtUpload(fileName, apiKey) {
