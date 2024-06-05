@@ -38235,12 +38235,7 @@ const src_path = __nccwpck_require__(1017)
 
 ;(async () => {
     try {
-        // Get the JSON webhook payload for the event that triggered the workflow
-        // const payload = JSON.stringify(github.context.payload, undefined, 2)
-        // console.log('github.context.payload', github.context.payload)
-
         // console.log('github.context', github.context)
-
         if (github.context.eventName !== 'release') {
             console.log('Not a release:', github.context.eventName)
             // return
@@ -38248,7 +38243,6 @@ const src_path = __nccwpck_require__(1017)
 
         const vtApiKey = core.getInput('vt_api_key')
         console.log('vtApiKey:', vtApiKey)
-
         const githubToken = core.getInput('github_token')
         console.log('githubToken:', githubToken)
 
@@ -38282,9 +38276,6 @@ const src_path = __nccwpck_require__(1017)
             return
         }
 
-        // const links = getAssetsLinks(assets.data)
-        // console.log('links:', links)
-
         const assetsPath = src_path.join(__dirname, 'assets')
         console.log('assetsPath:', assetsPath)
 
@@ -38303,7 +38294,7 @@ const src_path = __nccwpck_require__(1017)
             const link = await vtLink(response.data.id, vtApiKey)
             console.log('link:', link)
             const data = {
-                name: assets.data,
+                name: asset.name,
                 link: link,
             }
             results.push(data)
@@ -38319,21 +38310,6 @@ const src_path = __nccwpck_require__(1017)
         core.setFailed(error.message)
     }
 })()
-
-// /**
-//  * @function getAssetsLinks
-//  * @param {Object} assets
-//  * @return {Array[String]}
-//  */
-// function getAssetsLinks(assets) {
-//     // console.log('assets:', assets)
-//     const links = []
-//     assets.forEach((asset) => {
-//         // console.log('asset:', asset)
-//         links.push(asset.browser_download_url)
-//     })
-//     return links
-// }
 
 })();
 
