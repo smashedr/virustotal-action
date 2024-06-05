@@ -68,7 +68,7 @@ const crypto = require('crypto')
             const response = await vtUpload(filePath, vtApiKey)
             const hash = await vtHash(response.data.id, vtApiKey)
             console.log('hash:', hash)
-            const calculatedHash = calculateSHA256(filePath)
+            const calculatedHash = await calculateSHA256(filePath)
             console.log('calculatedHash:', calculatedHash)
             const link = `https://www.virustotal.com/gui/file/${hash | calculatedHash}`
             console.log('link:', link)

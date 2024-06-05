@@ -38210,11 +38210,12 @@ async function vtHash(id, apiKey) {
         }
     )
     console.log('response.data:', response.data)
-    console.log('response.data.meta.file_info:', response.data.meta.file_info)
+    const info = response.data.meta.file_info
+    console.log('response.data.meta.file_info:', info)
 
-    const sha256Hash = response.data.meta.file_info.sha256
-    console.log('sha256Hash:', sha256Hash)
-    return sha256Hash
+    const hash = info.sha256 || info.sha1 || info.md5
+    console.log('hash:', hash)
+    return hash
 }
 
 async function vtUploadUrl(filePath, apiKey) {
@@ -38310,7 +38311,7 @@ const src_crypto = __nccwpck_require__(6113)
             const response = await vtUpload(filePath, vtApiKey)
             const hash = await vtHash(response.data.id, vtApiKey)
             console.log('hash:', hash)
-            const calculatedHash = calculateSHA256(filePath)
+            const calculatedHash = await calculateSHA256(filePath)
             console.log('calculatedHash:', calculatedHash)
             const link = `https://www.virustotal.com/gui/file/${hash | calculatedHash}`
             console.log('link:', link)
