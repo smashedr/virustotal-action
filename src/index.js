@@ -53,7 +53,9 @@ const path = require('path')
 
         body = body.concat('\n\n**VirusTotal Results:**')
         for (const td of testData) {
-            body = body.concat(`\n[${td.name}](${td.link})`)
+            const parts = td.link.split('/')
+            const hash = parts[parts.length - 1]
+            body = body.concat(`\n- ${td.name} [${hash}](${td.link})`)
         }
         console.log('body:', body)
 
