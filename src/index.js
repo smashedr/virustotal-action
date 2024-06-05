@@ -1,4 +1,4 @@
-import { downloadAsset, vtUpload, vtHash } from './vt.js'
+import { downloadAsset, vtUpload } from './vt.js'
 
 const core = require('@actions/core')
 const github = require('@actions/github')
@@ -66,13 +66,15 @@ const crypto = require('crypto')
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
-            const hash = await vtHash(response.data.id, vtApiKey)
-            console.log('hash:', hash)
-            const sha256 = await calculateSHA256(filePath)
-            console.log('sha256:', sha256)
+            console.log('response.data.id:', response.data.id)
+            // const hash = await vtHash(response.data.id, vtApiKey)
+            // console.log('hash:', hash)
+            // const sha256 = await calculateSHA256(filePath)
+            // console.log('sha256:', sha256)
             const md5 = await calculateMD5(filePath)
             console.log('md5:', md5)
-            const link = `https://www.virustotal.com/gui/file/${hash || md5 || sha256}`
+            // const link = `https://www.virustotal.com/gui/file/${hash || md5 || sha256}`
+            const link = `https://www.virustotal.com/gui/file/${md5}`
             console.log('link:', link)
             const data = {
                 name: asset.name,
@@ -107,26 +109,6 @@ const crypto = require('crypto')
     }
 })()
 
-async function calculateSHA256(filePath) {
-    const hash = crypto.createHash('sha256')
-    const stream = fs.createReadStream(filePath)
-
-    return new Promise((resolve, reject) => {
-        stream.on('data', (data) => {
-            hash.update(data)
-        })
-
-        stream.on('end', () => {
-            const sha256Hash = hash.digest('hex')
-            resolve(sha256Hash)
-        })
-
-        stream.on('error', (err) => {
-            reject(err)
-        })
-    })
-}
-
 async function calculateMD5(filePath) {
     return new Promise((resolve, reject) => {
         const hash = crypto.createHash('md5')
@@ -146,3 +128,23 @@ async function calculateMD5(filePath) {
         })
     })
 }
+
+// async function calculateSHA256(filePath) {
+//     const hash = crypto.createHash('sha256')
+//     const stream = fs.createReadStream(filePath)
+//
+//     return new Promise((resolve, reject) => {
+//         stream.on('data', (data) => {
+//             hash.update(data)
+//         })
+//
+//         stream.on('end', () => {
+//             const sha256Hash = hash.digest('hex')
+//             resolve(sha256Hash)
+//         })
+//
+//         stream.on('error', (err) => {
+//             reject(err)
+//         })
+//     })
+// }
