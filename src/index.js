@@ -37,7 +37,30 @@ const path = require('path')
             core.setFailed(`Release Not Found: ${releaseTag}`)
             return
         }
-        console.log('release.data.body:', release.data.body)
+        // console.log('release.data.body:', release.data.body)
+
+        const testData = [
+            {
+                name: 'hls_video_downloader-chrome.crx',
+                link: 'https://www.virustotal.com/gui/file/3a012ae8458cd74b01eb483661b6076de27a83b219d690a929039e7e7cbb450e',
+            },
+            {
+                name: 'hls_video_downloader-chrome.crx',
+                link: 'https://www.virustotal.com/gui/file/e1f59774d3536dcbb05e1a31dd0fdc49ab093acf97068f8659a41422c4776e30',
+            },
+        ]
+
+        release.data.body.concat('\n\n**VirusTotal Results:**')
+        for (const td of testData) {
+            release.data.body.concat(`\n[${td.name}](${td.link})`)
+        }
+
+        await octokit.rest.repos.updateRelease({
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            release_id: release.data.id,
+            body: release.data.body,
+        })
 
         // const assets = await octokit.rest.repos.listReleaseAssets({
         //     owner: github.context.repo.owner,
