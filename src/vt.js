@@ -57,6 +57,7 @@ export async function vtLink(id, apiKey) {
             },
         }
     )
+    console.log('response:', response)
 
     const sha256Hash = response.data.meta.file_info.sha256
     console.log('sha256Hash:', sha256Hash)
