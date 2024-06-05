@@ -31,13 +31,14 @@ const path = require('path')
             repo: github.context.repo.repo,
             tag: testTag,
         })
-        console.log('release:', release)
+        // console.log('release:', release)
         if (!release?.data) {
             console.log('Release Not Found:', release)
             core.setFailed(`Release Not Found: ${releaseTag}`)
             return
         }
-        // console.log('release.data.body:', release.data.body)
+        let body = release.data.body
+        console.log('release.data.body:', body)
 
         const testData = [
             {
@@ -50,16 +51,17 @@ const path = require('path')
             },
         ]
 
-        release.data.body.concat('\n\n**VirusTotal Results:**')
+        body = body.concat('\n\n**VirusTotal Results:**')
         for (const td of testData) {
-            release.data.body.concat(`\n[${td.name}](${td.link})`)
+            body = body.concat(`\n[${td.name}](${td.link})`)
         }
+        console.log('body:', body)
 
         await octokit.rest.repos.updateRelease({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             release_id: release.data.id,
-            body: release.data.body,
+            body: body,
         })
 
         // const assets = await octokit.rest.repos.listReleaseAssets({
