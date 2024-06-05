@@ -72,7 +72,7 @@ const path = require('path')
             console.log(`name: ${asset.name}`)
             const filePath = await downloadAsset(asset)
             console.log('filePath:', filePath)
-            const response = vtUpload(filePath, vtApiKey)
+            const response = await vtUpload(filePath, vtApiKey)
             const link = await vtLink(response.data.id)
             console.log('link:', link)
             const data = {
