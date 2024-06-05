@@ -38235,8 +38235,10 @@ const src_path = __nccwpck_require__(1017)
         console.log('githubToken:', githubToken)
         const updateRelease = core.getInput('update_release')
         console.log('updateRelease:', updateRelease)
-        console.log('typeof:', typeof updateRelease)
-        console.log('wtf')
+
+        console.log('process.env:', process.env)
+        const tempDir = process.env.RUNNER_TEMP
+        console.log('tempDir:', tempDir)
 
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
@@ -38270,10 +38272,6 @@ const src_path = __nccwpck_require__(1017)
             return
         }
 
-        console.log('process.env:', process.env)
-        const tempDir = process.env.RUNNER_TEMP
-        console.log('tempDir:', tempDir)
-
         const assetsPath = src_path.join(__dirname, 'assets')
         console.log('assetsPath:', assetsPath)
 
@@ -38299,6 +38297,11 @@ const src_path = __nccwpck_require__(1017)
             results.push(data)
         }
         console.log('results:', results)
+
+        if (updateRelease === 'false') {
+            console.log('Skipping update_release:', updateRelease)
+            return
+        }
 
         let body = release.data.body
         console.log('release.data.body:', body)
