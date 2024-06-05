@@ -3,10 +3,10 @@ const FormData = require('form-data')
 const fs = require('fs')
 const path = require('path')
 
-export async function downloadAsset(asset, assetsDir = 'assets') {
+export async function downloadAsset(asset, assetsPath) {
     // console.log('asset:', asset)
     // console.log('assetsDir:', assetsDir)
-    const filePath = path.join(__dirname, assetsDir, asset.name)
+    const filePath = path.join(assetsPath, asset.name)
     console.log('filePath:', filePath)
     const response = await axios({
         method: 'GET',

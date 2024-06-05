@@ -8,7 +8,9 @@ const path = require('path')
 
 ;(async () => {
     try {
-        // console.log('github.context', github.context)
+        console.log('github.context', github.context)
+        // console.log('process.env:', process.env)
+
         if (github.context.eventName !== 'release') {
             console.log('Skipping non-release:', github.context.eventName)
             // return
@@ -21,15 +23,12 @@ const path = require('path')
         const updateRelease = core.getInput('update_release')
         console.log('updateRelease:', updateRelease)
 
-        console.log('process.env:', process.env)
-        const tempDir = process.env.RUNNER_TEMP
-        console.log('tempDir:', tempDir)
-
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
 
         // const releaseTag = github.context.ref.replace('refs/tags/', '')
         // console.log('releaseTag:', releaseTag)
+        console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
         const releaseTag = '0.1.12'
         console.log('releaseTag:', releaseTag)
 
@@ -57,9 +56,9 @@ const path = require('path')
             return
         }
 
-        const assetsPath = path.join(__dirname, 'assets')
+        console.log('RUNNER_TEMP:', process.env.RUNNER_TEMP)
+        const assetsPath = path.join(process.env.RUNNER_TEMP, 'assets')
         console.log('assetsPath:', assetsPath)
-
         // Create the 'assets' directory if it doesn't exist
         if (!fs.existsSync(assetsPath)) {
             console.log('mkdirSync:', assetsPath)
@@ -69,7 +68,7 @@ const path = require('path')
         const results = []
         for (const asset of assets.data) {
             console.log(`name: ${asset.name}`)
-            const filePath = await downloadAsset(asset)
+            const filePath = await downloadAsset(asset, assetsPath)
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
             console.log('response.data.id:', response.data.id)

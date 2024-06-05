@@ -38155,10 +38155,10 @@ const FormData = __nccwpck_require__(4334)
 const fs = __nccwpck_require__(7147)
 const path = __nccwpck_require__(1017)
 
-async function downloadAsset(asset, assetsDir = 'assets') {
+async function downloadAsset(asset, assetsPath) {
     // console.log('asset:', asset)
     // console.log('assetsDir:', assetsDir)
-    const filePath = path.join(__dirname, assetsDir, asset.name)
+    const filePath = path.join(assetsPath, asset.name)
     console.log('filePath:', filePath)
     const response = await axios({
         method: 'GET',
@@ -38223,7 +38223,9 @@ const src_path = __nccwpck_require__(1017)
 
 ;(async () => {
     try {
-        // console.log('github.context', github.context)
+        console.log('github.context', github.context)
+        // console.log('process.env:', process.env)
+
         if (github.context.eventName !== 'release') {
             console.log('Skipping non-release:', github.context.eventName)
             // return
@@ -38236,15 +38238,12 @@ const src_path = __nccwpck_require__(1017)
         const updateRelease = core.getInput('update_release')
         console.log('updateRelease:', updateRelease)
 
-        console.log('process.env:', process.env)
-        const tempDir = process.env.RUNNER_TEMP
-        console.log('tempDir:', tempDir)
-
         const octokit = github.getOctokit(githubToken)
         // console.log('octokit:', octokit)
 
         // const releaseTag = github.context.ref.replace('refs/tags/', '')
         // console.log('releaseTag:', releaseTag)
+        console.log('GITHUB_REF_NAME:', process.env.GITHUB_REF_NAME)
         const releaseTag = '0.1.12'
         console.log('releaseTag:', releaseTag)
 
@@ -38272,9 +38271,9 @@ const src_path = __nccwpck_require__(1017)
             return
         }
 
-        const assetsPath = src_path.join(__dirname, 'assets')
+        console.log('RUNNER_TEMP:', process.env.RUNNER_TEMP)
+        const assetsPath = src_path.join(process.env.RUNNER_TEMP, 'assets')
         console.log('assetsPath:', assetsPath)
-
         // Create the 'assets' directory if it doesn't exist
         if (!src_fs.existsSync(assetsPath)) {
             console.log('mkdirSync:', assetsPath)
@@ -38284,7 +38283,7 @@ const src_path = __nccwpck_require__(1017)
         const results = []
         for (const asset of assets.data) {
             console.log(`name: ${asset.name}`)
-            const filePath = await downloadAsset(asset)
+            const filePath = await downloadAsset(asset, assetsPath)
             console.log('filePath:', filePath)
             const response = await vtUpload(filePath, vtApiKey)
             console.log('response.data.id:', response.data.id)
